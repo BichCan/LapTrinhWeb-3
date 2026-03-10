@@ -1,10 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Tìm kiếm chương trình đào tạo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+
+<div class="container">
+
+    <!-- TIÊU ĐỀ -->
+    <h1 class="main-title">TRA CỨU CHƯƠNG TRÌNH ĐÀO TẠO</h1>
+    <p class="sub-title">
+        Hệ thống tìm kiếm thông tin các chương trình đào tạo của nhà trường
+    </p>
+
+    <!-- SEARCH -->
+    <form method="GET" class="search-box">
+        <input type="text" name="keyword"
+               placeholder="Nhập tên chương trình, mã ngành, lĩnh vực, đơn vị quản lý..."
+               value="{{ request.args.get('keyword','') }}">
+        <button type="submit">Tìm kiếm</button>
+    </form>
+
+    <hr class="divider">
+
+    <!-- DANH SÁCH CHƯƠNG TRÌNH -->
+    {% for ct in chuongtrinh %}
+    <div class="program-card">
+        <h2 class="program-title">
+            {{ ct.TenChuongTrinh }} – {{ ct.MaNganh }}
+        </h2>
+
+        <div class="program-actions">
+            <a href="/chitiet/{{ ct.IDChuongTrinh }}" class="btn btn-detail">
+                Xem thông tin chi tiết
+            </a>
+            <a href="/quanly/{{ ct.IDChuongTrinh }}" class="btn btn-manage">
+                Quản lý chương trình
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
 
 </body>
 </html>

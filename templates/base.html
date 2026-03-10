@@ -5,11 +5,37 @@
     <title>Chương trình đào tạo</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+     <link rel="stylesheet" href="{{ url_for('static', filename='form.css') }}">
 </head>
 
 <body>
 
-<h1>Quản lý chương trình đào tạo</h1>
+<header class="header">
+
+<div class="header-container">
+
+    <div class="logo-area">
+
+        <img src="{{ url_for('static', filename='logo.png') }}" class="logo">
+
+        <div class="title">
+            <div class="vn">KHOA CÔNG NGHỆ THÔNG TIN</div>
+            <div class="en">Faculty of Information Technology</div>
+        </div>
+
+    </div>
+
+    <nav class="menu">
+        <a href="#">GIỚI THIỆU</a>
+        <a href="#">ĐÀO TẠO</a>
+        <a href="#">NGHIÊN CỨU</a>
+        <a href="#">THÔNG TIN</a>
+        <a href="#">SINH VIÊN</a>
+    </nav>
+
+</div>
+
+</header>
 
 <hr>
 

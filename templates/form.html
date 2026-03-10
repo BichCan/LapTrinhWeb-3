@@ -1,10 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block content %}
+<div class="form-container">
+    <h2>Thêm môn học vào học kỳ</h2>
+
+    <form>
+        <!-- STT -->
+        <label>Số thứ tự</label>
+        <input type="number" placeholder="Nhập STT">
+
+        <!-- Chọn môn -->
+        <label>Chọn môn học</label>
+        <select id="subject" onchange="showInfo()">
+            <option value="">-- Chọn môn học --</option>
+            <option value="1" data-code="LLNL1105" data-credit="3">Triết học Mác - Lênin</option>
+            <option value="2" data-code="LUCS1129" data-credit="3">Pháp luật đại cương</option>
+            <option value="3" data-code="LLNL1106" data-credit="2">Kinh tế chính trị Mác - Lênin</option>
+            <option value="4" data-code="LLNL1107" data-credit="2">Chủ nghĩa xã hội khoa học</option>
+            <option value="5" data-code="LLTT1101" data-credit="2">Tư tưởng Hồ Chí Minh</option>
+            <option value="6" data-code="LLDL1102" data-credit="2">Lịch sử Đảng Cộng sản Việt Nam</option>
+        </select>
+
+        <!-- Mã học phần -->
+        <label>Mã học phần</label>
+        <input type="text" id="code" readonly>
+
+        <!-- Số tín chỉ -->
+        <label>Số tín chỉ</label>
+        <input type="text" id="credit" readonly>
+
+        <!-- Học kỳ -->
+        <label>Học kỳ</label>
+        <select>
+            <option>Học kỳ I</option>
+            <option>Học kỳ II</option>
+            <option>Học kỳ III</option>
+            <option>Học kỳ IV</option>
+            <option>Học kỳ V</option>
+            <option>Học kỳ VI</option>
+        </select>
+
+        <button type="submit">Thêm môn</button>
+    </form>
+</div>
+
+<script>
+function showInfo(){
+    let subject = document.getElementById("subject");
+    let option = subject.options[subject.selectedIndex];
+
+    document.getElementById("code").value = option.getAttribute("data-code");
+    document.getElementById("credit").value = option.getAttribute("data-credit");
+}
+</script>
+
+{% endblock %}

@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Tìm kiếm chương trình đào tạo</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
+{% extends "base.html" %}
 
+{% block content %}
 <div class="container">
 
     <!-- TIÊU ĐỀ -->
@@ -40,10 +34,6 @@
                 Quản lý chương trình
             </a>
         </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-
-</div>
-
-</body>
-</html>
+{% endblock %}

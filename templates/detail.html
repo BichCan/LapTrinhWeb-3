@@ -1,67 +1,7 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Chương trình đào tạo</title>
 
-    <style>
+{% extends "base.html" %}
 
-        body{
-            font-family: Arial;
-            background:#f5f5f5;
-            margin:40px;
-        }
-
-        .container{
-            width:1100px;
-            margin:auto;
-            background:white;
-            padding:30px;
-        }
-
-        h1{
-            text-align:center;
-        }
-
-        .description{
-            color:#444;
-            line-height:1.6;
-        }
-
-        table{
-            width:100%;
-            border-collapse:collapse;
-            margin-top:30px;
-        }
-
-        th{
-            background:#3d5fa3;
-            color:white;
-            padding:10px;
-            border:1px solid #dcdcdc;
-        }
-
-        td{
-            padding:10px;
-            border:1px solid #dcdcdc;
-            text-align:center;
-        }
-
-        .subject{
-            text-align:left;
-            color:#2a55c7;
-        }
-
-        .group{
-            background:#e5ecf7;
-            font-weight:bold;
-        }
-
-    </style>
-</head>
-
-<body>
-
+{% block content %}
 <div class="container">
 
 <h1>Công nghệ thông tin – 7480201</h1>
@@ -149,6 +89,4 @@ Chương trình đào tạo ngành Công nghệ thông tin bản có dấu mộc
 </table>
 
 </div>
-
-</body>
-</html>
+{% endblock %}

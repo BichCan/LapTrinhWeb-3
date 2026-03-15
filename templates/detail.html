@@ -1,80 +1,14 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Chương trình đào tạo</title>
+{% extends "base.html" %}
 
-    <style>
+{% block content %}
 
-        body{
-            font-family: Arial;
-            background:#f5f5f5;
-            margin:40px;
-        }
-
-        .container{
-            width:1100px;
-            margin:auto;
-            background:white;
-            padding:30px;
-        }
-
-        h1{
-            text-align:center;
-        }
-
-        .description{
-            color:#444;
-            line-height:1.6;
-        }
-
-        table{
-            width:100%;
-            border-collapse:collapse;
-            margin-top:30px;
-        }
-
-        th{
-            background:#3d5fa3;
-            color:white;
-            padding:10px;
-            border:1px solid #dcdcdc;
-        }
-
-        td{
-            padding:10px;
-            border:1px solid #dcdcdc;
-            text-align:center;
-        }
-
-        .subject{
-            text-align:left;
-            color:#2a55c7;
-        }
-
-        .group{
-            background:#e5ecf7;
-            font-weight:bold;
-        }
-
-    </style>
-</head>
-
-<body>
 
 <div class="container">
 
-<h1>Công nghệ thông tin – 7480201</h1>
+<h1>{{ct.tenct}}</h1>
 
 <p class="description">
-Đào tạo cử nhân Công nghệ thông tin có phẩm chất chính trị, đạo đức nghề nghiệp và sức khỏe tốt;
-có hiểu biết cơ bản về kinh tế, quản lý và quản trị kinh doanh; nắm vững kiến thức và kỹ năng chuyên sâu
-về Công nghệ thông tin.
-</p>
-
-<p>
-Chương trình đào tạo ngành Công nghệ thông tin bản có dấu mộc:
-<a href="#">Link</a>
+Danh sách các học phần thuộc chương trình đào tạo {{ct.tenct}}
 </p>
 
 <hr>
@@ -103,52 +37,52 @@ Chương trình đào tạo ngành Công nghệ thông tin bản có dấu mộc
     <th>8</th>
 </tr>
 
+{% set stt = namespace(value=1) %}
+
+{% for hocki, mon in rows|groupby("hocki") %}
+
 <tr class="group">
-<td></td>
-<td colspan="2">1. Học phần chung</td>
-<td></td>
-<td>14</td>
-<td colspan="8"></td>
-<td></td>
+<td colspan="14">Học kỳ {{hocki}}</td>
 </tr>
+
+{% for hp in mon %}
 
 <tr>
-<td>1</td>
-<td>1</td>
-<td class="subject">Triết học Mác – Lênin</td>
-<td>LLNL1105</td>
-<td>3</td>
-<td></td>
-<td>3</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>II</td>
+
+<td>{{stt.value}}</td>
+
+<td>{{loop.index}}</td>
+
+<td class="subject">{{hp.tenhp}}</td>
+
+<td>{{hp.mahp}}</td>
+
+<td>{{hp.sotc}}</td>
+
+<td>{% if hp.hocki==1 %}{{hp.sotc}}{% endif %}</td>
+<td>{% if hp.hocki==2 %}{{hp.sotc}}{% endif %}</td>
+<td>{% if hp.hocki==3 %}{{hp.sotc}}{% endif %}</td>
+<td>{% if hp.hocki==4 %}{{hp.sotc}}{% endif %}</td>
+<td>{% if hp.hocki==5 %}{{hp.sotc}}{% endif %}</td>
+<td>{% if hp.hocki==6 %}{{hp.sotc}}{% endif %}</td>
+<td>{% if hp.hocki==7 %}{{hp.sotc}}{% endif %}</td>
+<td>{% if hp.hocki==8 %}{{hp.sotc}}{% endif %}</td>
+
+<td>{{hp.hocki}}</td>
+
 </tr>
 
-<tr>
-<td>2</td>
-<td>2</td>
-<td class="subject">Pháp luật đại cương</td>
-<td>LUCS1129</td>
-<td>3</td>
-<td></td>
-<td>3</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>II</td>
-</tr>
+{% set stt.value = stt.value + 1 %}
 
+{% endfor %}
+
+{% endfor %}
 </table>
+
+<a href="/add/{{ct.mact}}">
+<button type="button" class="add">Thêm học phần</button>
+</a>
 
 </div>
 
-</body>
-</html>
+{% endblock %}

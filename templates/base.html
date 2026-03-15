@@ -8,11 +8,60 @@
 </head>
 
 <body>
+<header class="header">
 
-<h1>Quản lý chương trình đào tạo</h1>
+<div class="header-container">
 
+    <div class="logo-area">
+        <a href="/">
+        <img src="{{ url_for('static', filename='logo.png') }}" class="logo">
+        </a>
+        <div class="title">
+            <div class="vn">KHOA CÔNG NGHỆ THÔNG TIN</div>
+            <div class="en">Faculty of Information Technology</div>
+        </div>
+
+    </div>
+
+    <nav class="menu">
+        <a href="#">GIỚI THIỆU</a>
+        <a href="#">ĐÀO TẠO</a>
+        <a href="#">NGHIÊN CỨU</a>
+        <a href="#">THÔNG TIN</a>
+        <a href="#">SINH VIÊN</a>
+    </nav>
+
+</div>
+
+</header>
 <hr>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<div id="toast-container">
 
+{% for category, message in messages %}
+<div class="toast {{category}}">
+{{message}}
+</div>
+{% endfor %}
+
+</div>
+{% endif %}
+{% endwith %}
+<script>
+
+setTimeout(function(){
+
+let toast = document.getElementById("toast-container")
+
+if(toast){
+toast.style.opacity = "0"
+toast.style.transition = "0.5s"
+}
+
+},3000)
+
+</script>
 {% block content %}
 {% endblock %}
 

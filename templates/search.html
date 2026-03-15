@@ -1,10 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block content %}
+
+
+<div class="container">
+
+<h2>Tìm kiếm chương trình đào tạo</h2>
+
+<div class="search-box">
+
+<form method="GET">
+
+<input type="text" name="keyword" placeholder="Nhập tên chương trình" value="{{ request.args.get('keyword','') }}">
+<button class="search-btn" type="submit">Tìm kiếm</button>
+
+</form>
+
+</div>
+
+<table>
+
+<tr>
+<th>Mã CT</th>
+<th>Tên chương trình</th>
+<th>Chỉ tiêu</th>
+<th>Lĩnh vực</th>
+<th>Chi tiết</th>
+</tr>
+
+{% for ct in data %}
+
+<tr>
+<td>{{ct.mact}}</td>
+<td>{{ct.tenct}}</td>
+<td>{{ct.chitieu}}</td>
+<td>{{ct.linhvuc}}</td>
+<td>
+<a href="/detail/{{ct.mact}}">Xem</a>
+</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+{% endblock %}

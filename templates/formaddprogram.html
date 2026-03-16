@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="form-container">
+<h2>Thêm Chương trình đào tạo</h2>
+
+<form method="POST">
+
+<label>Mã chương trình</label>
+<input type="text" id="mact" name="mact" value="{{chuongtrinh.mact}}" placeholder="Nhập mã chương trình" required>
+
+<label>Tên chương trình</label>
+<input type="text" id="tenct" name="tenct" value="{{chuongtrinh.tenct}}" placeholder="Nhập tên chương trình" required>
+
+<label>Chỉ tiêu</label>
+<input type="text" id="chitieu" name="chitieu" value="{{chuongtrinh.chitieu}}" required>
+
+<label>Lĩnh vực</label>
+<input type="text" id="linhvuc" name="linhvuc" value="{{chuongtrinh.linhvuc}}" required>
+
+
+<button class="form-btn" type="submit">Thêm chương trình</button>
+
+</form>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const mactInput = document.querySelector('input[name="mact"]');
+    const tenctInput = document.querySelector('input[name="tenct"]');
+    const chitieuInput = document.querySelector('input[name="chitieu"]');
+    const linhvucInput = document.querySelector('input[name="linhvuc"]');
+
+    // Tạo container cho thông báo lỗi
+    function createErrorContainer(input) {
+        let errorDiv = input.parentNode.querySelector('.error-message');
+        if (!errorDiv) {
+            errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.style.color = '#f44336';
+            errorDiv.style.fontSize = '13px';
+            errorDiv.style.marginTop = '5px';
+            input.parentNode.insertBefore(errorDiv, input.nextSibling);
+        }
+        return errorDiv;
+    }
+
+    // Validate từng trường
+    function validateMact() {
+        const errorDiv = createErrorContainer(mactInput);
+        const value = mactInput.value.trim();
+
+        if (!value) {
+            errorDiv.textContent = 'Vui lòng nhập mã chương trình';
+            mactInput.style.borderColor = '#f44336';
+            return false;
+        } else if (!/^[A-Za-z0-9]+$/.test(value)) {
+            errorDiv.textContent = 'Mã chương trình chỉ được chứa chữ và số, không có khoảng trắng';
+            mactInput.style.borderColor = '#f44336';
+            return false;
+        } else {
+            errorDiv.textContent = '';
+            mactInput.style.borderColor = '#e0e0e0';
+            return true;
+        }
+    }
+
+    function validateTenct() {
+        const errorDiv = createErrorContainer(tenctInput);
+        const value = tenctInput.value.trim();
+
+        if (!value) {
+            errorDiv.textContent = 'Vui lòng nhập tên chương trình';
+            tenctInput.style.borderColor = '#f44336';
+            return false;
+        } else {
+            errorDiv.textContent = '';
+            tenctInput.style.borderColor = '#e0e0e0';
+            return true;
+        }
+    }
+
+    function validateChitieu() {
+        const errorDiv = createErrorContainer(chitieuInput);
+        const value = chitieuInput.value.trim();
+
+        if (!value) {
+            errorDiv.textContent = 'Vui lòng nhập chỉ tiêu';
+            chitieuInput.style.borderColor = '#f44336';
+            return false;
+        } else if (isNaN(value) || parseInt(value) <= 0) {
+            errorDiv.textContent = 'Chỉ tiêu phải là số lớn hơn 0';
+            chitieuInput.style.borderColor = '#f44336';
+            return false;
+        } else {
+            errorDiv.textContent = '';
+            chitieuInput.style.borderColor = '#e0e0e0';
+            return true;
+        }
+    }
+
+    function validateLinhvuc() {
+        const errorDiv = createErrorContainer(linhvucInput);
+        const value = linhvucInput.value.trim();
+
+        if (!value) {
+            errorDiv.textContent = 'Vui lòng nhập lĩnh vực';
+            linhvucInput.style.borderColor = '#f44336';
+            return false;
+        } else {
+            errorDiv.textContent = '';
+            linhvucInput.style.borderColor = '#e0e0e0';
+            return true;
+        }
+    }
+
+    // Validate form trước khi submit
+    form.addEventListener('submit', function(e) {
+        const isMactValid = validateMact();
+        const isTenctValid = validateTenct();
+        const isChitieuValid = validateChitieu();
+        const isLinhvucValid = validateLinhvuc();
+
+        if (!isMactValid || !isTenctValid || !isChitieuValid || !isLinhvucValid) {
+            e.preventDefault();
+
+            // Scroll đến lỗi đầu tiên
+            const firstError = document.querySelector('.error-message:not(:empty)');
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    });
+
+    // Chỉ cho phép nhập số vào trường chỉ tiêu
+    chitieuInput.addEventListener('keypress', function(e) {
+        const char = String.fromCharCode(e.which);
+        if (!/[0-9]/.test(char)) {
+            e.preventDefault();
+        }
+    });
+
+    // Hiển thị thông báo flash từ server
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            setTimeout(function() {
+                {% for category, message in messages %}
+                    showNotification("{{ message }}", "{{ category }}");
+                {% endfor %}
+            }, 100);
+        {% endif %}
+    {% endwith %}
+
+    function showNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.style.position = 'fixed';
+        notification.style.top = '20px';
+        notification.style.right = '20px';
+        notification.style.padding = '15px 20px';
+        notification.style.borderRadius = '8px';
+        notification.style.color = 'white';
+        notification.style.fontWeight = 'bold';
+        notification.style.zIndex = '1000';
+        notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+
+        if (type === 'success') {
+            notification.style.backgroundColor = '#4CAF50';
+        } else {
+            notification.style.backgroundColor = '#f44336';
+        }
+
+        notification.textContent = message;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+});
+</script>
+
+{% endblock %}

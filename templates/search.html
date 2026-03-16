@@ -2,48 +2,84 @@
 
 {% block content %}
 
-
 <div class="container">
+    <h2>Tìm kiếm chương trình đào tạo</h2>
 
-<h2>Tìm kiếm chương trình đào tạo</h2>
+    <div class="search-box">
+        <form method="GET">
+            <input type="text" name="keyword" placeholder="Nhập tên chương trình" value="{{ request.args.get('keyword','') }}">
+            <button class="search-btn" type="submit">Tìm kiếm</button>
+        </form>
 
-<div class="search-box">
+        <a href="{{ url_for('add_program') }}">
+            <button type="button" class="add">Thêm chương trình đào tạo</button>
+        </a>
+    </div>
 
-<form method="GET">
-
-<input type="text" name="keyword" placeholder="Nhập tên chương trình" value="{{ request.args.get('keyword','') }}">
-<button class="search-btn" type="submit">Tìm kiếm</button>
-
-</form>
-
+    <table>
+        <thead>
+            <tr>
+                <th>Mã CT</th>
+                <th>Tên chương trình</th>
+                <th>Chỉ tiêu</th>
+                <th>Lĩnh vực</th>
+                <th>Chi tiết</th>
+                <th>Xóa chương trình</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ct in data %}
+            <tr>
+                <td>{{ ct.mact }}</td>
+                <td>{{ ct.tenct }}</td>
+                <td>{{ ct.chitieu }}</td>
+                <td>{{ ct.linhvuc }}</td>
+                <td>
+                    <a href="{{ url_for('detail', mact=ct.mact) }}">Xem chi tiết</a>
+                </td>
+                <td>
+                    <button onclick="confirmDelete('{{ ct.mact }}', '{{ ct.tenct }}')" class="delete-btn">
+                        Xóa
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 
-<table>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<tr>
-<th>Mã CT</th>
-<th>Tên chương trình</th>
-<th>Chỉ tiêu</th>
-<th>Lĩnh vực</th>
-<th>Chi tiết</th>
-</tr>
+<script>
+function confirmDelete(mact, tenct) {
+    Swal.fire({
+        title: 'Xác nhận xóa',
+        text: `Bạn có chắc chắn muốn xóa chương trình "${tenct}"?`,
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Xóa',
+        cancelButtonText: 'Hủy',
+        showClass: {
+            popup: '',
+            icon: ''
+        },
+        hideClass: {
+            popup: '',
+            icon: ''
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Tạo form và submit
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/delete_program/${mact}`;
+            document.body.appendChild(form);
+            form.submit();
+        }
+    });
+}
+</script>
 
-{% for ct in data %}
-
-<tr>
-<td>{{ct.mact}}</td>
-<td>{{ct.tenct}}</td>
-<td>{{ct.chitieu}}</td>
-<td>{{ct.linhvuc}}</td>
-<td>
-<a href="/detail/{{ct.mact}}">Xem</a>
-</td>
-</tr>
-
-{% endfor %}
-
-</table>
-
-</div>
 
 {% endblock %}

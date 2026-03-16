@@ -5,13 +5,42 @@
 }
 
 .header-container{
-    width:1200px;
+    width:100%;
     margin:auto;
     display:flex;
     align-items:center;
     justify-content:space-between;
 }
+@media screen and (max-width: 972px) {
+    .header-container {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
 
+    .logo-area {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .logo {
+        padding:auto
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .menu {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .menu a {
+        margin-left: 0;
+        padding: 5px;
+    }
+}
 .logo-area{
     display:flex;
     align-items:center;
@@ -271,4 +300,8 @@ td{
 a{
     color:#2a55c7;
     text-decoration:none;
+}
+#tenct,#mact,#chitieu,#linhvuc{
+width:96%;
+padding: auto;
 }

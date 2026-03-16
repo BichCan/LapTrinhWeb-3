@@ -113,5 +113,86 @@ def add_subject(mact):
     conn.close()
 
     return render_template("form.html", hocphan=hocphan, ct=ct)
+#thêm chương trình đào tạo
+@app.route("/add_program", methods=["GET","POST"])
+def add_program():
+    if request.method == "POST":
+        # Lấy dữ liệu từ form
+        mact = request.form["mact"].strip().upper()
+        tenct = request.form["tenct"].strip()
+        chitieu = request.form["chitieu"].strip()
+        linhvuc = request.form["linhvuc"].strip()
+
+        # Kiểm tra dữ liệu đầu vào
+        if not mact or not tenct or not chitieu or not linhvuc:
+            flash("Vui lòng điền đầy đủ thông tin!", "error")
+            return redirect(request.url)
+
+        # Kiểm tra chỉ tiêu phải là số
+        try:
+            chitieu = int(chitieu)
+            if chitieu <= 0:
+                flash("Chỉ tiêu phải là số lớn hơn 0!", "error")
+                return redirect(request.url)
+        except ValueError:
+            flash("Chỉ tiêu phải là số nguyên!", "error")
+            return redirect(request.url)
+
+        conn = get_db()
+        cur = conn.cursor()
+
+        # Kiểm tra mã chương trình đã tồn tại chưa
+        cur.execute("SELECT * FROM chuongtrinh WHERE mact=?", (mact,))
+        existing = cur.fetchone()
+
+        if existing:
+            conn.close()
+            flash(f"Mã chương trình {mact} đã tồn tại!", "error")
+            return render_template("add_program.html",
+                                   chuongtrinh=request.form)
+
+        # Thêm chương trình mới
+        cur.execute("""
+            INSERT INTO chuongtrinh (mact, tenct, chitieu, linhvuc)
+            VALUES (?, ?, ?, ?)
+        """, (mact, tenct, chitieu, linhvuc))
+
+        conn.commit()
+        conn.close()
+
+        flash(f"Thêm chương trình {tenct} thành công!", "success")
+
+        # Chuyển hướng về trang chi tiết của chương trình vừa thêm
+        return redirect(url_for('detail', mact=mact))
+
+    # GET request - hiển thị form
+    return render_template("formaddprogram.html", chuongtrinh={})
+
+
+@app.route("/delete_program/<mact>", methods=["POST"])
+def delete_program(mact):
+    conn = get_db()
+    cur = conn.cursor()
+
+    # Kiểm tra chương trình có tồn tại không
+    cur.execute("SELECT * FROM chuongtrinh WHERE mact=?", (mact,))
+    program = cur.fetchone()
+
+    if not program:
+        conn.close()
+        flash("Không tìm thấy chương trình!", "error")
+        return redirect(url_for('search'))
+
+    # Xóa tất cả môn học trong chương trình (bảng chuongtrinhct)
+    cur.execute("DELETE FROM chuongtrinhct WHERE mact=?", (mact,))
+
+    # Xóa chương trình (bảng chuongtrinh)
+    cur.execute("DELETE FROM chuongtrinh WHERE mact=?", (mact,))
+
+    conn.commit()
+    conn.close()
+
+    flash(f"Đã xóa chương trình {program['tenct']} và các môn học trong chương trình thành công!", "success")
+    return redirect(url_for('search'))
 if __name__ == "__main__":
     app.run(debug=True)

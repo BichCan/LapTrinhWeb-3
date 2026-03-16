@@ -194,5 +194,67 @@ def delete_program(mact):
 
     flash(f"Đã xóa chương trình {program['tenct']} và các môn học trong chương trình thành công!", "success")
     return redirect(url_for('search'))
+@app.route("/sua/<mact>/<mahp>", methods=["GET", "POST"])
+def sua_mon(mact, mahp):
+    db = get_db()
+
+    db.execute("SELECT * FROM chuongtrinh WHERE mact=?", (mact,))
+    ct = db.execute("SELECT * FROM chuongtrinh WHERE mact=?", (mact,)).fetchone()
+
+    mon = db.execute("""
+        SELECT ct.*, hp.tenhp, hp.sotc
+        FROM chuongtrinhct ct
+        JOIN hocphan hp ON ct.mahp = hp.mahp
+        WHERE ct.mact=? AND ct.mahp=?
+    """, (mact, mahp)).fetchone()
+
+    if not mon:
+        db.close()
+        flash("Không tìm thấy học phần!", "error")
+        return redirect(url_for('detail', mact=mact))
+
+    hocphan = db.execute("SELECT * FROM hocphan").fetchall()
+
+    if request.method == "POST":
+        stt = request.form["stt"]
+        mahp2 = request.form["mahp"]
+        hocki = request.form["hocki"]
+
+        sotc = db.execute("SELECT sotc FROM hocphan WHERE mahp=?", (mahp2,)).fetchone()["sotc"]
+
+        if mahp2 != mahp:
+            check = db.execute("SELECT * FROM chuongtrinhct WHERE mact=? AND mahp=?", (mact, mahp2)).fetchone()
+            if check:
+                db.close()
+                flash("Môn học đã tồn tại trong chương trình!", "error")
+                return redirect(request.url)
+
+        db.execute("""
+            UPDATE chuongtrinhct
+            SET mahp=?, stt=?, sotc=?, hocki=?
+            WHERE mact=? AND mahp=?
+        """, (mahp2, stt, sotc, hocki, mact, mahp))
+
+        db.commit()
+        db.close()
+
+        flash("Cập nhật học phần thành công!", "success")
+        return redirect(url_for('detail', mact=mact))
+
+    db.close()
+    return render_template("edit_subject.html", ct=ct, mon=mon, hocphan=hocphan)
+
+@app.route("/xoa/<mact>/<mahp>", methods=["POST"])
+def xoa_mon(mact, mahp):
+    db = get_db()
+
+    db.execute("DELETE FROM chuongtrinhct WHERE mact=? AND mahp=?", (mact, mahp))
+
+    db.commit()
+    db.close()
+
+    flash("Đã xóa môn học thành công!", "success")
+    return redirect(url_for('detail', mact=mact))
+
 if __name__ == "__main__":
     app.run(debug=True)

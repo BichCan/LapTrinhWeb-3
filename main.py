@@ -108,7 +108,7 @@ def add_subject(mact):
 
         flash("Thêm môn học thành công!", "success")
 
-        return redirect(request.url)
+        return redirect(url_for('detail',mact=mact))
 
     conn.close()
 

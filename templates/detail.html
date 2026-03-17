@@ -22,6 +22,7 @@ Danh sách các học phần thuộc chương trình đào tạo {{ct.tenct}}
     <th rowspan="2">Số tín chỉ</th>
     <th colspan="8">Phân bố học kỳ</th>
     <th rowspan="2">Học kỳ</th>
+    <th rowspan="2">Thao tác</th>
 </tr>
 
 <tr>
@@ -42,7 +43,7 @@ Danh sách các học phần thuộc chương trình đào tạo {{ct.tenct}}
 {% for hocki, mon in rows|groupby("hocki") %}
 
 <tr class="group">
-<td colspan="14">Học kỳ {{hocki}}</td>
+<td colspan="15">Học kỳ {{hocki}}</td>
 </tr>
 
 {% for hp in mon %}
@@ -69,6 +70,17 @@ Danh sách các học phần thuộc chương trình đào tạo {{ct.tenct}}
 <td>{% if hp.hocki==8 %}{{hp.sotc}}{% endif %}</td>
 
 <td>{{hp.hocki}}</td>
+
+<td>
+    <a href="/sua/{{ct.mact}}/{{hp.mahp}}">
+        <button type="button" class="edit">Sửa</button>
+    </a>
+    <form action="/xoa/{{ct.mact}}/{{hp.mahp}}" method="POST"
+          onsubmit="return confirm('Bạn có chắc muốn xóa môn này?');"
+          style="display:inline;">
+        <button type="submit" class="delete">Xóa</button>
+    </form>
+</td>
 
 </tr>
 
